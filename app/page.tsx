@@ -1,3 +1,4 @@
+import { Mail } from 'lucide-react'
 import { getTopicStats } from '@/app/actions/topics'
 import { Personal } from '@/components/personal'
 import { Professional } from '@/components/professional'
@@ -9,27 +10,31 @@ export default async function Page() {
   const stats = await getTopicStats()
 
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-14 px-6 py-20 sm:py-28">
+    <main className="mx-auto flex max-w-6xl flex-col gap-10 px-4 py-8 sm:px-6 sm:py-12">
       <SiteHeader />
 
       <ProfileTabs professional={<Professional />} personal={<Personal stats={stats} />} />
 
-      <section aria-labelledby="contact-heading" className="grid gap-6 border-t border-slate-200 pt-10 sm:grid-cols-[10rem_1fr]">
-        <h2 id="contact-heading" className="font-mono text-sm uppercase tracking-wider text-slate-500">
-          Contact
-        </h2>
+      <section
+        aria-labelledby="contact-heading"
+        className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900 to-amber-950/40 p-6 sm:flex-row sm:items-center sm:p-8"
+      >
         <div>
-          <p className="text-slate-600">The best way to reach me is by email.</p>
-          <a
-            href={`mailto:${profile.email}`}
-            className="mt-2 inline-block break-all text-lg font-medium text-slate-900 underline decoration-slate-300 underline-offset-4 hover:decoration-slate-900"
-          >
-            {profile.email}
-          </a>
+          <h2 id="contact-heading" className="text-xl font-semibold text-slate-50">
+            Get in touch
+          </h2>
+          <p className="text-slate-400">The best way to reach me is by email.</p>
         </div>
+        <a
+          href={`mailto:${profile.email}`}
+          className="inline-flex items-center gap-2 break-all rounded-lg bg-amber-400 px-4 py-2.5 text-sm font-medium text-slate-950 transition-colors hover:bg-amber-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
+        >
+          <Mail aria-hidden="true" className="size-4 shrink-0" />
+          {profile.email}
+        </a>
       </section>
 
-      <footer className="border-t border-slate-200 pt-6 text-sm text-slate-500">
+      <footer className="border-t border-slate-800 pt-6 text-sm text-slate-500">
         © {new Date().getFullYear()} {profile.name}
       </footer>
     </main>

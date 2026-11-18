@@ -21,10 +21,10 @@ function LikeButton({ slug, count, liked }: { slug: string; count: number; liked
           await toggleLike(slug)
         })
       }}
-      className={`inline-flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 ${
+      className={`inline-flex w-fit items-center gap-1.5 rounded-md border px-2.5 py-1 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400 ${
         optimistic.liked
-          ? 'border-slate-900 bg-slate-900 text-slate-50'
-          : 'border-slate-300 text-slate-700 hover:border-slate-400 hover:bg-slate-100'
+          ? 'border-amber-400 bg-amber-400 text-slate-950'
+          : 'border-slate-700 text-slate-300 hover:border-amber-400/60 hover:text-amber-200'
       }`}
     >
       <Heart aria-hidden="true" className={`size-4 ${optimistic.liked ? 'fill-current' : ''}`} />
@@ -32,6 +32,9 @@ function LikeButton({ slug, count, liked }: { slug: string; count: number; liked
     </button>
   )
 }
+
+const fieldClass =
+  'rounded-md border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:border-amber-400 focus:outline-none'
 
 function CommentForm({ slug }: { slug: string }) {
   const formRef = useRef<HTMLFormElement>(null)
@@ -47,14 +50,7 @@ function CommentForm({ slug }: { slug: string }) {
       <label htmlFor={`name-${slug}`} className="sr-only">
         Your name
       </label>
-      <input
-        id={`name-${slug}`}
-        name="name"
-        required
-        maxLength={60}
-        placeholder="Your name"
-        className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
-      />
+      <input id={`name-${slug}`} name="name" required maxLength={60} placeholder="Your name" className={fieldClass} />
       <label htmlFor={`body-${slug}`} className="sr-only">
         Your comment
       </label>
@@ -66,22 +62,27 @@ function CommentForm({ slug }: { slug: string }) {
         maxLength={1000}
         rows={3}
         placeholder="Share your thoughts"
-        className="resize-none rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none"
+        className={`resize-none ${fieldClass}`}
       />
       {state.error && (
-        <p role="alert" className="text-sm text-red-700">
+        <p role="alert" className="text-sm text-red-400">
           {state.error}
         </p>
       )}
       <button
         type="submit"
         disabled={pending}
-        className="self-end rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-slate-50 hover:bg-slate-700 disabled:opacity-60"
+        className="self-end rounded-md bg-amber-400 px-4 py-2 text-sm font-medium text-slate-950 hover:bg-amber-300 disabled:opacity-60"
       >
         {pending ? 'Posting…' : 'Post comment'}
       </button>
     </form>
   )
+}
+
+const categoryTone: Record<Topic['category'], string> = {
+  Science: 'text-sky-300',
+  Philosophy: 'text-teal-300',
 }
 
 export function Discussions({ stats }: { stats: TopicStats }) {
@@ -92,11 +93,11 @@ export function Discussions({ stats }: { stats: TopicStats }) {
 
   return (
     <>
-      <ul className="grid gap-3 sm:grid-cols-2">
+      <ul className="grid gap-4 sm:grid-cols-2">
         {topics.map((t) => (
           <li
             key={t.slug}
-            className="flex flex-col gap-4 rounded-md border border-slate-200 bg-white p-4 transition-colors hover:border-slate-400"
+            className="flex flex-col gap-4 rounded-xl border border-slate-800 bg-slate-900 p-5 transition-colors hover:border-amber-400/40"
           >
             <button
               type="button"
@@ -104,15 +105,17 @@ export function Discussions({ stats }: { stats: TopicStats }) {
                 setActiveSlug(t.slug)
                 dialogRef.current?.showModal()
               }}
-              className="flex flex-col gap-2 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+              className="flex flex-col gap-2 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
             >
-              <span className="font-mono text-xs uppercase tracking-wider text-slate-500">{t.category}</span>
-              <span className="font-medium text-slate-900">{t.title}</span>
-              <span className="line-clamp-2 text-sm text-slate-600">{t.view}</span>
+              <span className={`font-mono text-xs uppercase tracking-wider ${categoryTone[t.category]}`}>
+                {t.category}
+              </span>
+              <span className="font-medium text-slate-50">{t.title}</span>
+              <span className="line-clamp-2 text-sm text-slate-400">{t.view}</span>
             </button>
             <div className="mt-auto flex items-center gap-3">
               <LikeButton slug={t.slug} count={stats.likes[t.slug] ?? 0} liked={stats.liked.includes(t.slug)} />
-              <span className="inline-flex items-center gap-1.5 text-sm text-slate-500">
+              <span className="inline-flex items-center gap-1.5 text-sm text-slate-400">
                 <MessageCircle aria-hidden="true" className="size-4" />
                 <span className="tabular-nums">{stats.comments[t.slug]?.length ?? 0}</span>
                 <span className="sr-only">comments</span>
@@ -126,26 +129,28 @@ export function Discussions({ stats }: { stats: TopicStats }) {
         ref={dialogRef}
         aria-labelledby="topic-dialog-title"
         onClick={(e) => e.target === dialogRef.current && dialogRef.current?.close()}
-        className="m-auto max-h-[88vh] w-[min(36rem,92vw)] rounded-lg border border-slate-200 bg-slate-50 p-0 shadow-xl backdrop:bg-slate-950/60"
+        className="m-auto max-h-[88vh] w-[min(36rem,92vw)] rounded-xl border border-slate-700 bg-slate-900 p-0 text-slate-100 shadow-xl backdrop:bg-slate-950/70"
       >
         <div className="flex flex-col gap-5 p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex flex-col gap-1">
-              <span className="font-mono text-xs uppercase tracking-wider text-slate-500">{active.category}</span>
-              <h3 id="topic-dialog-title" className="text-lg font-semibold text-slate-900">
+              <span className={`font-mono text-xs uppercase tracking-wider ${categoryTone[active.category]}`}>
+                {active.category}
+              </span>
+              <h3 id="topic-dialog-title" className="text-lg font-semibold text-slate-50">
                 {active.title}
               </h3>
             </div>
             <button
               type="button"
               onClick={() => dialogRef.current?.close()}
-              className="rounded-md p-1 text-slate-500 hover:bg-slate-200 hover:text-slate-900"
+              className="rounded-md p-1 text-slate-400 hover:bg-slate-800 hover:text-slate-100"
               aria-label="Close"
             >
               <X className="size-5" aria-hidden="true" />
             </button>
           </div>
-          <p className="leading-relaxed text-slate-700">{active.view}</p>
+          <p className="leading-relaxed text-slate-300">{active.view}</p>
           <LikeButton
             key={activeSlug}
             slug={activeSlug}
@@ -153,21 +158,21 @@ export function Discussions({ stats }: { stats: TopicStats }) {
             liked={stats.liked.includes(activeSlug)}
           />
 
-          <div className="flex flex-col gap-3 border-t border-slate-200 pt-5">
-            <h4 className="text-sm font-medium text-slate-900">Comments ({activeComments.length})</h4>
+          <div className="flex flex-col gap-3 border-t border-slate-800 pt-5">
+            <h4 className="text-sm font-medium text-slate-50">Comments ({activeComments.length})</h4>
             {activeComments.length === 0 ? (
-              <p className="text-sm text-slate-500">No comments yet. Start the conversation.</p>
+              <p className="text-sm text-slate-400">No comments yet. Start the conversation.</p>
             ) : (
               <ul className="flex flex-col gap-3">
                 {activeComments.map((c) => (
-                  <li key={c.id} className="rounded-md border border-slate-200 bg-white p-3">
-                    <p className="text-sm font-medium text-slate-900">
+                  <li key={c.id} className="rounded-md border border-slate-800 bg-slate-950 p-3">
+                    <p className="text-sm font-medium text-slate-100">
                       {c.authorName}{' '}
                       <time dateTime={c.createdAt} className="font-normal text-slate-500">
                         · {new Date(c.createdAt).toLocaleDateString()}
                       </time>
                     </p>
-                    <p className="mt-1 whitespace-pre-wrap text-sm text-slate-700">{c.body}</p>
+                    <p className="mt-1 whitespace-pre-wrap text-sm text-slate-300">{c.body}</p>
                   </li>
                 ))}
               </ul>

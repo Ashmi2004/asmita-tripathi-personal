@@ -1,7 +1,7 @@
 const range = (n: number) => Array.from({ length: n }, (_, i) => String(i + 1).padStart(2, '0'))
 
-export const trekkingPhotos = range(15).map((n) => `/images/trekking/${n}.jpg`)
-export const photographyPhotos = range(12).map((n) => `/images/photography/${n}.jpg`)
+export const trekkingPhotos = range(14).map((n) => `/images/trekking/${n}.jpg`)
+export const photographyPhotos = range(10).map((n) => `/images/photography/${n}.jpg`)
 export const paintingPhotos = range(14).map((n) => `/images/paintings/${n}.jpg`)
 
 export type Book = {
@@ -11,11 +11,16 @@ export type Book = {
   opinion: string
 }
 
-// Placeholder entries — replace with real books, ratings (1–5), and opinions.
+// Set `rating` (1–5) and `opinion` to add my take on each book.
 export const books: Book[] = [
-  { title: 'Book title', author: 'Author name', rating: 0, opinion: 'My thoughts on this book are coming soon.' },
-  { title: 'Book title', author: 'Author name', rating: 0, opinion: 'My thoughts on this book are coming soon.' },
-  { title: 'Book title', author: 'Author name', rating: 0, opinion: 'My thoughts on this book are coming soon.' },
+  { title: 'Tuesdays with Morrie', author: 'Mitch Albom', rating: 0, opinion: 'My thoughts on this book are coming soon.' },
+  { title: 'The Kite Runner', author: 'Khaled Hosseini', rating: 0, opinion: 'My thoughts on this book are coming soon.' },
+  {
+    title: 'The Stationery Shop of Tehran',
+    author: 'Marjan Kamali',
+    rating: 0,
+    opinion: 'My thoughts on this book are coming soon.',
+  },
 ]
 
 export type Topic = {

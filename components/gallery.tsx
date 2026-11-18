@@ -22,7 +22,7 @@ export function Gallery({ photos, label }: { photos: string[]; label: string }) 
             <button
               type="button"
               onClick={() => open(i)}
-              className="group relative block aspect-square w-full overflow-hidden rounded-md bg-slate-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+              className="group relative block aspect-square w-full overflow-hidden rounded-lg bg-slate-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400"
             >
               <Image
                 src={src}
