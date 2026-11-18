@@ -1,42 +1,24 @@
-import { Education, Experience } from '@/components/journey'
-import { Section } from '@/components/section'
+import { getTopicStats } from '@/app/actions/topics'
+import { Personal } from '@/components/personal'
+import { Professional } from '@/components/professional'
+import { ProfileTabs } from '@/components/profile-tabs'
 import { SiteHeader } from '@/components/site-header'
-import { profile, projects } from '@/lib/profile'
+import { profile } from '@/lib/profile'
 
-export default function Page() {
+export default async function Page() {
+  const stats = await getTopicStats()
+
   return (
-    <main className="mx-auto flex max-w-3xl flex-col gap-16 px-6 py-20 sm:py-28">
+    <main className="mx-auto flex max-w-3xl flex-col gap-14 px-6 py-20 sm:py-28">
       <SiteHeader />
 
-      <div className="flex flex-col gap-12">
-        <Section id="experience" title="Experience">
-          <Experience />
-          <a
-            href={profile.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-block text-sm text-slate-600 underline underline-offset-4 hover:text-slate-900"
-          >
-            Full profile on LinkedIn<span className="sr-only"> (opens in a new tab)</span>
-          </a>
-        </Section>
+      <ProfileTabs professional={<Professional />} personal={<Personal stats={stats} />} />
 
-        <Section id="education" title="Education">
-          <Education />
-        </Section>
-
-        <Section id="projects" title="Projects">
-          <ul className="flex flex-col gap-5">
-            {projects.map((project) => (
-              <li key={project.name}>
-                <h3 className="font-medium text-slate-900">{project.name}</h3>
-                {project.description && <p className="text-sm text-slate-600">{project.description}</p>}
-              </li>
-            ))}
-          </ul>
-        </Section>
-
-        <Section id="contact" title="Contact">
+      <section aria-labelledby="contact-heading" className="grid gap-6 border-t border-slate-200 pt-10 sm:grid-cols-[10rem_1fr]">
+        <h2 id="contact-heading" className="font-mono text-sm uppercase tracking-wider text-slate-500">
+          Contact
+        </h2>
+        <div>
           <p className="text-slate-600">The best way to reach me is by email.</p>
           <a
             href={`mailto:${profile.email}`}
@@ -44,8 +26,8 @@ export default function Page() {
           >
             {profile.email}
           </a>
-        </Section>
-      </div>
+        </div>
+      </section>
 
       <footer className="border-t border-slate-200 pt-6 text-sm text-slate-500">
         © {new Date().getFullYear()} {profile.name}
